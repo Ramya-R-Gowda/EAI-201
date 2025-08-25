@@ -1,0 +1,40 @@
+Available vacuum shapes: ['Circle', 'Square', 'Triangle', 'Pentagon']
+Choose a vacuum shape: Circle
+
+Actions: start | left | right | dock | stop | exit
+Enter action: right
+Circle vacuum turned right.
+
+Actions: start | left | right | dock | stop | exit
+Enter action: dock
+Circle vacuum docking at charging station.
+
+Actions: start | left | right | dock | stop | exit
+Enter action: start
+Circle vacuum started cleaning.
+
+Choose cleaning category: 1. Solid  2. Liquid
+Enter choice: 1
+
+Solid options: 1. Dust  2. Papers/Rocks  3. Others
+Enter solid type: 1
+Cleaning dust... Shape optimized to Rectangle for efficiency.
+
+Actions: start | left | right | dock | stop | exit
+Enter action: right
+Rectangle vacuum turned right.
+
+Actions: start | left | right | dock | stop | exit
+Enter action: start
+Rectangle vacuum started cleaning.
+
+Choose cleaning category: 1. Solid  2. Liquid
+Enter choice: 2
+
+Liquid options: 1. Water  2. Others
+Enter liquid type: 2
+Cleaning other liquids... Shape changed to Cone.
+
+Actions: start | left | right | dock | stop | exit
+Enter action: exit
+Exiting program.
