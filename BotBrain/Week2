@@ -1,0 +1,243 @@
+Week  2  Report:
+
+1.	DESCRIPTION:
+This week, my main focus was to build the foundation of BotBrain, the smart assistant that will help students and visitors move around Chanakya University. I am working on designing the system architecture, identifying the key modules, and setting up an required database design. This structure will make it easier to implement coding, testing, and future upgrades.
+
+
+2.	BLOCK DIAGRAM:
+
+ 
+
+Flow of work:
+User → UI → Bot → Database (for info) OR Pathfinding (for routes) → Back to UI
+
+3.	FLOW CHART MODULE AND FEATURES EXPLANATION:
+
+	The user types a query like “Shortest path from Hostel to Library”.
+	The User Interface (currently a simple Python CLI) collects the input.
+	The NLP & Bot Engine understands whether the request is for navigation or general information.
+	If it’s a navigation request, the Pathfinding Module calculates the best route using algorithms (BFS for now, but UCS and A* will follow).
+	If it’s an info query, the Database fetches details (like opening hours or staff info).
+	Results are shown back to the user.
+
+
+
+4.	METHODOLOGY:
+
+Step 1: I will sketch the system design using draw.io or in other web-app(still working on the diagram part)
+
+Step 2: Defined modules that is built a Python dictionary (graph) to represent the campus map.(described it in the sample code)
+
+Step 3: Implemented and tested BFS for pathfinding between buildings.(DFS, UCS, A* algorithms still working on it)
+
+Step 4: I’m working on the process to design database schema (tables for locations, staff, FAQs, events) in Google Sheets. (still working on it)
+
+Step 5:  Integrate test code for CLI input/output and documented progress. (still working on it)
+
+
+5.	 PEAS ANALYSIS:
+
+Aspects
+
+	
+Details
+
+Performance	Finds shortest/valid paths fast; retrieves info within seconds
+Environment	Chanakya University (buildings, walkways, staff info, FAQs)
+Actuators	Text output on CLI (later expandable to speech/GUI)
+Sensors	
+User queries: source, destination, info request
+
+
+
+
+6.	 AGENT DESCRIPTION:
+
+This is a goal-based agent:
+•	It will have a map of the campus (model).
+•	If the goal is “reach Library,” it finds the best route.
+•	If the goal is “get info,” it answers from the database.
+
+7.	DATABASE OUTLINE (still working on it):
+	Locations Table : This table keeps information about all the main buildings. For each place, I added its name (like “Library” or “Canteen”), type (academic, hostel, admin etc.), opening hours (when it is accessible), and coordinates (to help with maps and pathfinding later).
+	Staff Table:  This stores details about faculty and staff. Each entry has the name of the person, their office/room number, contact details, and the building they are located in. This makes it easy for students to look up where to find a particular professor or office.
+	FAQs Table: This is a simple question-answer table. Each row has a common question (like “When does the library close?”), the answer.
+
+
+
+8.	Appendix(these are code samples might develop and alter it later):
+
+
+•	Campus graph:
+
+a detailed Python dictionary representing your campus as a weighted graph, where keys are locations (nodes) and values are dictionaries of connected locations with distances (edges).
+
+
+
+
+campus_graph = {
+
+    "Main Gate": {"Exit Gate": 100, "Security Gate": 150, "Admin Block": 160, "Academic Block": 210, "Library": 275, "Auditorium": 286, "Cafeteria": 276, "Food Court": 699, "Medical Center": 180, "Sports Area": 580, "Hostel": 600, "Mart": 620},
+
+    "Security Gate": {"Library": 100, "Exit Gate": 180, "Main Gate": 220, "Cafeteria": 130, "Academic Block": 240, "Auditorium": 120, "Medical Center": 90, "Mart": 520, "Hostel": 500, "Sports Area": 210, "Food Court": 471, "Admin Block": 90},
+
+    "Admin Block": {"Main Gate": 160, "Academic Block": 126, "Mart": 434, "Cafeteria": 35, "Exit Gate": 220, "Library": 16, "Security Gate": 80, "Hostel": 506, "Auditorium": 17, "Medical Center": 80, "Food Court": 355, "Sports Area": 740},
+
+    "Medical Center": {"Food Court": 405, "Hostel": 490, "Cafeteria": 90, "Exit Gate": 160, "Auditorium": 80, "Main Gate": 180, "Library": 75, "Admin Block": 80, "Academic Block": 85, "Security Gate": 90, "Sports Area": 840, "Mart": 510},
+
+    "Auditorium": {"Food Court": 344, "Security Gate": 120, "Exit Gate": 260, "Library": 3, "Main Gate": 286, "Academic Block": 150, "Mart": 574, "Medical Center": 80, "Hostel": 510, "Sports Area": 830, "Admin Block": 17, "Cafeteria": 10},
+
+    "Exit Gate": {"Main Gate": 100, "Academic Block": 250, "Cafeteria": 270, "Security Gate": 180, "Auditorium": 260, "Library": 240, "Hostel": 580, "Admin Block": 220, "Sports Area": 350, "Food Court": 609, "Medical Center": 160, "Mart": 600},
+
+    "Hostel": {"Admin Block": 506, "Sports Area": 300, "Academic Block": 380, "Mart": 200, "Food Court": 816, "Library": 450, "Auditorium": 510, "Main Gate": 600, "Cafeteria": 520, "Medical Center": 490, "Security Gate": 500},
+
+    "Cafeteria": {"Main Gate": 276, "Auditorium": 10, "Admin Block": 35, "Library": 63, "Exit Gate": 270, "Food Court": 355, "Academic Block": 27, "Security Gate": 130, "Medical Center": 90, "Mart": 585, "Hostel": 520, "Sports Area": 900},
+
+    "Library": {"Auditorium": 3, "Food Court": 470, "Exit Gate": 240, "Admin Block": 16, "Main Gate": 275, "Mart": 465, "Academic Block": 46, "Medical Center": 75, "Hostel": 450, "Sports Area": 810, "Security Gate": 100, "Cafeteria": 63},
+
+    "Sports Area": {"Admin Block": 740, "Cricket Ground": 350, "Main Gate": 580, "Hostel": 300, "Academic Block": 560, "Exit Gate": 350, "Library": 810, "Security Gate": 210, "Medical Center": 840, "Mart": 320, "Food Court": 430, "Cafeteria": 900},
+
+    "Academic Block": {"Food Court": 192, "Security Gate": 240, "Exit Gate": 250, "Mart": 410, "Admin Block": 126, "Library": 46, "Hostel": 380, "Auditorium": 150, "Medical Center": 85, "Cafeteria": 27, "Sports Area": 560, "Main Gate": 210},
+
+    "Food Court": {"Exit Gate": 609, "Library": 470, "Mart": 836, "Medical Center": 405, "Auditorium": 344, "Main Gate": 699, "Admin Block": 355, "Hostel": 816, "Academic Block": 192, "Security Gate": 471, "Cafeteria": 355, "Sports Area": 430},
+}
+
+
+DFS:
+
+# Campus graph as given in assignment
+campus_graph = {
+    "Main Gate": {"Exit Gate": 100, "Security Gate": 150, "Admin Block": 160, "Academic Block": 210, "Library": 275, "Auditorium": 286, "Cafeteria": 276, "Food Court": 699, "Medical Center": 180, "Sports Area": 580, "Hostel": 600, "Mart": 620},
+    "Security Gate": {"Library": 100, "Exit Gate": 180, "Main Gate": 220, "Cafeteria": 130, "Academic Block": 240, "Auditorium": 120, "Medical Center": 90, "Mart": 520, "Hostel": 500, "Sports Area": 210, "Food Court": 471, "Admin Block": 90},
+    "Admin Block": {"Main Gate": 160, "Academic Block": 126, "Mart": 434, "Cafeteria": 35, "Exit Gate": 220, "Library": 16, "Security Gate": 80, "Hostel": 506, "Auditorium": 17, "Medical Center": 80, "Food Court": 355, "Sports Area": 740},
+    "Medical Center": {"Food Court": 405, "Hostel": 490, "Cafeteria": 90, "Exit Gate": 160, "Auditorium": 80, "Main Gate": 180, "Library": 75, "Admin Block": 80, "Academic Block": 85, "Security Gate": 90, "Sports Area": 840, "Mart": 510},
+    "Auditorium": {"Food Court": 344, "Security Gate": 120, "Exit Gate": 260, "Library": 3, "Main Gate": 286, "Academic Block": 150, "Mart": 574, "Medical Center": 80, "Hostel": 510, "Sports Area": 830, "Admin Block": 17, "Cafeteria": 10},
+    "Exit Gate": {"Main Gate": 100, "Academic Block": 250, "Cafeteria": 270, "Security Gate": 180, "Auditorium": 260, "Library": 240, "Hostel": 580, "Admin Block": 220, "Sports Area": 350, "Food Court": 609, "Medical Center": 160, "Mart": 600},
+    "Hostel": {"Admin Block": 506, "Sports Area": 300, "Academic Block": 380, "Mart": 200, "Food Court": 816, "Library": 450, "Auditorium": 510, "Main Gate": 600, "Cafeteria": 520, "Medical Center": 490, "Security Gate": 500},
+    "Cafeteria": {"Main Gate": 276, "Auditorium": 10, "Admin Block": 35, "Library": 63, "Exit Gate": 270, "Food Court": 355, "Academic Block": 27, "Security Gate": 130, "Medical Center": 90, "Mart": 585, "Hostel": 520, "Sports Area": 900},
+    "Library": {"Auditorium": 3, "Food Court": 470, "Exit Gate": 240, "Admin Block": 16, "Main Gate": 275, "Mart": 465, "Academic Block": 46, "Medical Center": 75, "Hostel": 450, "Sports Area": 810, "Security Gate": 100, "Cafeteria": 63},
+    "Sports Area": {"Admin Block": 740, "Cricket Ground": 350, "Main Gate": 580, "Hostel": 300, "Academic Block": 560, "Exit Gate": 350, "Library": 810, "Security Gate": 210, "Medical Center": 840, "Mart": 320, "Food Court": 430, "Cafeteria": 900},
+    "Academic Block": {"Food Court": 192, "Security Gate": 240, "Exit Gate": 250, "Mart": 410, "Admin Block": 126, "Library": 46, "Hostel": 380, "Auditorium": 150, "Medical Center": 85, "Cafeteria": 27, "Sports Area": 560, "Main Gate": 210},
+    "Food Court": {"Exit Gate": 609, "Library": 470, "Mart": 836, "Medical Center": 405, "Auditorium": 344, "Main Gate": 699, "Admin Block": 355, "Hostel": 816, "Academic Block": 192, "Security Gate": 471, "Cafeteria": 355, "Sports Area": 430},
+}
+
+# DFS function to find a path between two locations
+def dfs_path(graph, start, goal):
+    stack = [(start, [start])]   # Stack stores: (current_node, path_so_far)
+    visited = set()
+
+    while stack:
+        current, path = stack.pop()  # Get the last inserted node
+        if current == goal:
+            return path
+        if current not in visited:
+            visited.add(current)
+            # Add neighbors to stack
+            for neighbor in graph[current]:
+                if neighbor not in visited:
+                    stack.append((neighbor, path + [neighbor]))
+    return None  # No path found
+
+# Example usage
+source = "Hostel"
+destination = "Library"
+path = dfs_path(campus_graph, source, destination)
+if path:
+    print("DFS path from", source, "to", destination, ":", " -> ".join(path))
+else:
+    print("No path found.")
+
+# To show more details, you could also print the steps
+
+
+	
+
+	BFS:
+
+
+from collections import deque
+
+# Campus map represented as a graph: nodes are locations and edges are connections with distances
+campus_graph = {
+    "Main Gate": {"Exit Gate": 100, "Security Gate": 150, "Admin Block": 160, "Academic Block": 210, "Library": 275, "Auditorium": 286, "Cafeteria": 276, "Food Court": 699, "Medical Center": 180, "Sports Area": 580, "Hostel": 600, "Mart": 620},
+    "Security Gate": {"Library": 100, "Exit Gate": 180, "Main Gate": 220, "Cafeteria": 130, "Academic Block": 240, "Auditorium": 120, "Medical Center": 90, "Mart": 520, "Hostel": 500, "Sports Area": 210, "Food Court": 471, "Admin Block": 90},
+    "Admin Block": {"Main Gate": 160, "Academic Block": 126, "Mart": 434, "Cafeteria": 35, "Exit Gate": 220, "Library": 16, "Security Gate": 80, "Hostel": 506, "Auditorium": 17, "Medical Center": 80, "Food Court": 355, "Sports Area": 740},
+    "Medical Center": {"Food Court": 405, "Hostel": 490, "Cafeteria": 90, "Exit Gate": 160, "Auditorium": 80, "Main Gate": 180, "Library": 75, "Admin Block": 80, "Academic Block": 85, "Security Gate": 90, "Sports Area": 840, "Mart": 510},
+    "Auditorium": {"Food Court": 344, "Security Gate": 120, "Exit Gate": 260, "Library": 3, "Main Gate": 286, "Academic Block": 150, "Mart": 574, "Medical Center": 80, "Hostel": 510, "Sports Area": 830, "Admin Block": 17, "Cafeteria": 10},
+    "Exit Gate": {"Main Gate": 100, "Academic Block": 250, "Cafeteria": 270, "Security Gate": 180, "Auditorium": 260, "Library": 240, "Hostel": 580, "Admin Block": 220, "Sports Area": 350, "Food Court": 609, "Medical Center": 160, "Mart": 600},
+    "Hostel": {"Admin Block": 506, "Sports Area": 300, "Academic Block": 380, "Mart": 200, "Food Court": 816, "Library": 450, "Auditorium": 510, "Main Gate": 600, "Cafeteria": 520, "Medical Center": 490, "Security Gate": 500},
+    "Cafeteria": {"Main Gate": 276, "Auditorium": 10, "Admin Block": 35, "Library": 63, "Exit Gate": 270, "Food Court": 355, "Academic Block": 27, "Security Gate": 130, "Medical Center": 90, "Mart": 585, "Hostel": 520, "Sports Area": 900},
+    "Library": {"Auditorium": 3, "Food Court": 470, "Exit Gate": 240, "Admin Block": 16, "Main Gate": 275, "Mart": 465, "Academic Block": 46, "Medical Center": 75, "Hostel": 450, "Sports Area": 810, "Security Gate": 100, "Cafeteria": 63},
+    "Sports Area": {"Admin Block": 740, "Cricket Ground": 350, "Main Gate": 580, "Hostel": 300, "Academic Block": 560, "Exit Gate": 350, "Library": 810, "Security Gate": 210, "Medical Center": 840, "Mart": 320, "Food Court": 430, "Cafeteria": 900},
+    "Academic Block": {"Food Court": 192, "Security Gate": 240, "Exit Gate": 250, "Mart": 410, "Admin Block": 126, "Library": 46, "Hostel": 380, "Auditorium": 150, "Medical Center": 85, "Cafeteria": 27, "Sports Area": 560, "Main Gate": 210},
+    "Food Court": {"Exit Gate": 609, "Library": 470, "Mart": 836, "Medical Center": 405, "Auditorium": 344, "Main Gate": 699, "Admin Block": 355, "Hostel": 816, "Academic Block": 192, "Security Gate": 471, "Cafeteria": 355, "Sports Area": 430},
+}
+
+def bfs(graph, start, goal):
+    """
+    Find the shortest path between start and goal using BFS.
+    Args:
+        graph (dict): The campus graph.
+        start (str): Starting location.
+        goal (str): Goal location.
+    Returns:
+        list or None: List of nodes in path or None if no path.
+    """
+    queue = deque([(start, [start])])  # (current_node, path_so_far)
+    visited = set()  # To keep track of visited nodes
+    
+    while queue:
+        current_node, path = queue.popleft()
+        
+        # Check if goal reached
+        if current_node == goal:
+            return path
+        
+        # Continue BFS if node not visited
+        if current_node not in visited:
+            visited.add(current_node)
+            
+            # Add neighbors to queue with updated paths
+            for neighbor in graph[current_node]:
+                if neighbor not in visited:
+                    queue.append((neighbor, path + [neighbor]))
+    
+    return None  # If no path found
+
+def main():
+    print("Welcome to BotBrain Campus Navigator!")
+    print("Available locations:")
+    for location in campus_graph.keys():
+        print("-", location)
+    print()
+    
+    # Input start and goal locations
+    start = input("Enter your START location (exact as above): ").strip()
+    goal = input("Enter your DESTINATION location (exact as above): ").strip()
+    
+    # Validate inputs
+    if start not in campus_graph:
+        print(f"Invalid START location: {start}. Please type it exactly as shown.")
+        return
+    if goal not in campus_graph:
+        print(f"Invalid DESTINATION location: {goal}. Please type it exactly as shown.")
+        return
+    
+    # Find path
+    path = bfs(campus_graph, start, goal)
+    
+    if path:
+        print("\nShortest path found:")
+        print(" -> ".join(path))
+        print(f"Total stops: {len(path) - 1}")
+    else:
+        print("No possible path found between these locations.")
+
+if __name__ == "__main__":
+    main()
+
+
+NOTE: THESE CODES ARE NOT FINAL I WILL DEVELOP  IT  FURTHER WHICH WILL BE UPDATED  IN  THE  NEXT  WEEK  REPORT.  I AM STILL WORKING ON UCS,  DFS,  A*,  ALSO WILL DEVELOP  BFS SEARCH. I WILL SURELY  UPGRADE  THE  DEVELOPED  VERSION  OF  ALL  SAMPLE CODES  
+
+
+
