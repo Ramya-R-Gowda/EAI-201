@@ -1,0 +1,22 @@
+
+WEEK  3  REPORT
+ 
+For this week of project I have created a basic user interface for the BotBrain campus navigation chatbot has been created using Python’s Tkinter library. Currently, this UI is functioning independently and is not yet integrated with Google Maps API or any external mapping service, but such a connection may be added in the future if possible. 
+
+
+14.	Navigation module update:
+For pathfinding, I was able to successfully apply all four class pathfinding algorithms: BFS, DFS, UCS, and A*. The interface provides for users to select their starting location and destination, (and also what algorithm to employ [I'm setting that code to one best algorithm, as many users don't know which algorithm to use for what type of situations.]). When a query is submitted, BotBrain provides the entire route (location by location) and also the total distance with the estimated walking duration.
+
+15.	Database:
+I set up a simple database that stores campus information like:
+	department offices
+	available facilities
+	staff details(staff members contact of particular deparment)
+	timings of each facility
+
+(for now I have the database but its still not linked with the chatbot; I will try to integrate it to chatbot UI in the upcoming week progress)
+
+16.	Module Integration and Testing:
+For now I have created a basic UI which takes “START POINT”(present location) and “END POINT”(destination) as inputs from users
+NLP: The Chatbot is still in progress(for now its in default mode)
+After taking the inputs it runs through the suitable algorithm(mostly UCS) and gives the path to the users 
