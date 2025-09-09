@@ -16,7 +16,7 @@ User → UI → Bot → Database (for info) OR Pathfinding (for routes) → Back
 	The user types a query like “Shortest path from Hostel to Library”.
 	The User Interface (currently a simple Python CLI) collects the input.
 	The NLP & Bot Engine understands whether the request is for navigation or general information.
-	If it’s a navigation request, the Pathfinding Module calculates the best route using algorithms (BFS for now, but UCS and A* will follow).
+	If it’s a navigation request, the Pathfinding Module calculates the best route using algorithms ( UCS, BFS,DFS and A* will follow).
 	If it’s an info query, the Database fetches details (like opening hours or staff info).
 	Results are shown back to the user.
 
@@ -26,13 +26,13 @@ User → UI → Bot → Database (for info) OR Pathfinding (for routes) → Back
 
 Step 1: I will sketch the system design using draw.io or in other web-app(still working on the diagram part)
 
-Step 2: Defined modules that is built a Python dictionary (graph) to represent the campus map.(described it in the sample code)
+Step 2: Defined modules that is built a Python dictionary (graph) to represent the campus map.
 
-Step 3: Implemented and tested BFS for pathfinding between buildings.(DFS, UCS, A* algorithms still working on it)
+Step 3: Implemented and tested BFS, UCS for pathfinding between buildings.(DFS, A* algorithms )
 
 Step 4: I’m working on the process to design database schema (tables for locations, staff, FAQs, events) in Google Sheets. (still working on it)
 
-Step 5:  Integrate test code for CLI input/output and documented progress. (still working on it)
+Step 5:  Integrate test code for CLI input/output and documented progress. 
 
 
 5.	 PEAS ANALYSIS:
@@ -71,6 +71,7 @@ This is a goal-based agent:
 •	Campus graph:
 
 a detailed Python dictionary representing your campus as a weighted graph, where keys are locations (nodes) and values are dictionaries of connected locations with distances (edges).
+
 
 
 
